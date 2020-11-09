@@ -1,0 +1,22 @@
+{
+  "name": "anchors-aweigh",
+  "version": "1.0.0",
+  "description": "automatically add anchors to headings with jsdom",
+  "main": "anchors-aweigh.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itthipho1/Anchors-Aweigh.git"
+  },
+  "keywords": [
+    "anchors"
+  ],
+  "author": "Itthiphol Piromnam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itthipho1/Anchors-Aweigh/issues"
+  },
+  "homepage": "https://github.com/itthipho1/Anchors-Aweigh#readme"
+}
