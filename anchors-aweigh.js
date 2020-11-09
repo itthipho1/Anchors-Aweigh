@@ -12,8 +12,13 @@ var output = process.argv[3];
 let anchorsAweigh = (content) => {
     const dom = new JSDOM(content);
 
+    /**
+     *  Adjust this for targetting the headers important to have IDs
+     *      This is intended for the Canada.ca WET template so:
+     *          • we stay within <main>
+     *          • we skip the last header (allHeaders.length-1)
+     **/
     let allHeaders = dom.window.document.querySelectorAll("main h1, main h2, main h3, main h4, main h5, main h6");
-    // let allHeaders = dom.window.document.querySelectorAll("h1, h2, h3, h4, h5, h6");
 
     for (var i = 0; i < allHeaders.length-1; i++) {
 
@@ -29,16 +34,27 @@ let anchorsAweigh = (content) => {
             idToLink = allHeaders[i].getAttribute("id");
         }
 
+
+        /**
+         *  Create anchor el
+         **/
         const headerLink = dom.window.document.createElement('a');
         headerLink.setAttribute("class", "anchor-link");
         headerLink.setAttribute("href", "#" + idToLink);
-        headerLink.textContent = "#";
 
-        allHeaders[i].classList.add("has-anchor-link");
+        /**
+         *  Anchor display options
+         *      Option #1: #
+         *         • similar to https://adamsilver.io/articles/bidirectional-scrolling-whats-not-to-like/
+         *      Option #2: [chain link icon]
+         *         • similar to GitHub [https://github.com/itthipho1/Anchors-Aweigh]
+         **/
+        // headerLink.textContent = "#";
+        headerLink.innerHTML = '<span class="glyphicon glyphicon-link" aria-hidden="true"></span>';
+
+
+        allHeaders[i].classList.add("has-anchor-link"); // Optional class to help w/ custom styling
         allHeaders[i].prepend(headerLink);
-
-        //   console.log(allHeaders[i].outerHTML);
-
     }
 
     return dom.window.document.documentElement.outerHTML;
