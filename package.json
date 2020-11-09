@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/itthipho1/Anchors-Aweigh/issues"
   },
-  "homepage": "https://github.com/itthipho1/Anchors-Aweigh#readme"
+  "homepage": "https://github.com/itthipho1/Anchors-Aweigh#readme",
+  "dependencies": {
+    "jsdom": "^16.4.0"
+  }
 }
