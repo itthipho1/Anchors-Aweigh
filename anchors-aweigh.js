@@ -1,3 +1,32 @@
+///////// Settings - start
+
+    /**
+     *  Adjust this to target which headers you want to modify
+     *      This is intended for the Canada.ca WET template so:
+     *          • we stay within <main>
+     **/
+    const targetSelector = "main h1, main h2, main h3, main h4, main h5, main h6";
+
+    /**
+     *  Skip the last X selectors
+     *      This is intended for the Canada.ca WET template so:
+     *          • we skip the last header (allHeaders.length-1)
+     **/
+    const skipLastX = 1;
+
+    const skipFirstX = 0;
+
+    /**
+     *  In natural language processing, "Stopwords" are words that are so
+     *  frequent that they can safely be removed from a text without altering
+     *  its meaning.
+     *  This is a good option if you have lengthy headers.
+     **/
+    const removeStopWords = true;
+
+///////// Settings - stop
+
+
 // to READ file
 var fs = require('fs');
 
@@ -6,28 +35,28 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
 // Arguments
-var input = process.argv[2];
-var output = process.argv[3];
+var inputFilename = process.argv[2];
+var outputFilename = process.argv[3];
 
 let anchorsAweigh = (content) => {
     const dom = new JSDOM(content);
 
-    /**
-     *  Adjust this for targetting the headers important to have IDs
-     *      This is intended for the Canada.ca WET template so:
-     *          • we stay within <main>
-     *          • we skip the last header (allHeaders.length-1)
-     **/
-    let allHeaders = dom.window.document.querySelectorAll("main h1, main h2, main h3, main h4, main h5, main h6");
+    let allHeaders = dom.window.document.querySelectorAll(targetSelector);
 
-    for (var i = 0; i < allHeaders.length-1; i++) {
+    for (var i = 0 + skipFirstX; i < allHeaders.length - skipLastX; i++) {
 
-        if (!allHeaders[i].hasAttribute("id") || allHeaders[i].getAttribute("id").length===0) {
+        if (!allHeaders[i].hasAttribute("id") || allHeaders[i].getAttribute("id").length === 0) {
             // give it ID
             let headerWOaccents = allHeaders[i].textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
             let headerWOspecialchars = headerWOaccents.replace(/[^a-zA-Z ]/g, "");
-            let headerWOspaces =  headerWOspecialchars.replace(/  */g, '-');
-            idToLink = headerWOspaces + (i+1);
+            let headerWOspaces;
+            if (removeStopWords) {
+                var sw = require('./stopword.js');
+                headerWOspaces = sw.rmStopword(headerWOspecialchars);
+            } else {
+                headerWOspaces = headerWOspecialchars.replace(/  */g, '-');
+            }
+            idToLink = headerWOspaces.toLowerCase() + (i + 1);
             allHeaders[i].setAttribute("id", idToLink);
         } else {
             // already has ID
@@ -36,7 +65,7 @@ let anchorsAweigh = (content) => {
 
 
         /**
-         *  Create anchor el
+         *  Create anchor element
          **/
         const headerLink = dom.window.document.createElement('a');
         headerLink.setAttribute("class", "anchor-link");
@@ -61,10 +90,10 @@ let anchorsAweigh = (content) => {
 
 }
 
-var content = fs.readFileSync(input, 'utf8');
+var content = fs.readFileSync(inputFilename, 'utf8');
 
 content = anchorsAweigh(content);
 
-fs.writeFileSync(output, content);
+fs.writeFileSync(outputFilename, content);
 
 console.log("DONE")

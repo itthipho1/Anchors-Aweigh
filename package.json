@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/itthipho1/Anchors-Aweigh#readme",
   "dependencies": {
-    "jsdom": "^16.4.0"
+    "jsdom": "^16.4.0",
+    "stopword": "^1.0.3"
   }
 }
