@@ -1,34 +1,16 @@
-///////// Settings - start
-
-    /**
-     *  Adjust this to target which headers you want to modify
-     *      This is intended for the Canada.ca WET template so:
-     *          • we stay within <main>
-     **/
-    const targetSelector = "main h1, main h2, main h3, main h4, main h5, main h6";
-
-    /**
-     *  Skip the last X selectors
-     *      This is intended for the Canada.ca WET template so:
-     *          • we skip the last header (allHeaders.length-1)
-     **/
-    const skipLastX = 1;
-
-    const skipFirstX = 0;
-
-    /**
-     *  In natural language processing, "Stopwords" are words that are so
-     *  frequent that they can safely be removed from a text without altering
-     *  its meaning.
-     *  This is a good option if you have lengthy headers.
-     **/
-    const removeStopWords = true;
-
-///////// Settings - stop
+// Configuration centre - start
+const targetSelector = "main h1, main h2, main h3, main h4, main h5, main h6";
+const skipLastX = 1;
+const skipFirstX = 0;
+const removeStopWords = true;
+const multiFilePrefix = "output-";
+const multiFileSuffix = "";
+// Configuration centre - stop
 
 
-// to READ file
-var fs = require('fs');
+// for file manageemnt
+const fs = require('fs');
+const glob = require("glob");
 
 // for HTML properties
 const jsdom = require("jsdom");
@@ -90,10 +72,34 @@ let anchorsAweigh = (content) => {
 
 }
 
-var content = fs.readFileSync(inputFilename, 'utf8');
 
-content = anchorsAweigh(content);
+glob(inputFilename, function (err, files) {
+    var content;
 
-fs.writeFileSync(outputFilename, content);
-
-console.log("DONE")
+    if (err) {
+        console.log(err);
+    } else {
+        if (files.length === 0) {
+            console.log(err);
+            console.log('No files found with \'' + inputFilename + '\'.');
+        } else if (files.length === 1) {
+            content = fs.readFileSync(inputFilename, 'utf8');
+            content = anchorsAweigh(content);
+            fs.writeFileSync(outputFilename, content);
+            console.log(outputFilename);
+        } else {    // condition: files.length > 1
+            files.forEach(function (file) {
+                fs.readFile(file, function (err, data) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        content = anchorsAweigh(data);
+                        let [fileName, fileExtension] = file.split('.');
+                        fs.writeFileSync(multiFilePrefix + `${fileName}${multiFileSuffix}.${fileExtension}`, content);
+                        console.log(file);
+                    }
+                });
+            });
+        }
+    }
+});
