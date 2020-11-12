@@ -36,7 +36,7 @@ $ npm install
 # Run the app
 $ node anchors-aweigh.js 'input.html' 'output.html'
 ```
-### Multiple files
+### Pattern match multiple files
 When pattern matching multiple files, the output parameter (2 argument) is ignored. By default, ```'output-'``` is prefixed to every file.<br>
 This can be changed in the config section.
 ```zsh
@@ -49,7 +49,7 @@ $ node anchors-aweigh.js 'chap*.html'
 ```zsh
 node anchors-aweigh.js sample.html output.html
 ```
-
+<br>
 
 ## Configuration Options and Default Values
 ```javascript
