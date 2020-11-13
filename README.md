@@ -34,26 +34,27 @@ $ npm install
 
 ```zsh
 # Run the app
-$ node anchors-aweigh.js 'input.html' 'output.html'
+$ node main.js 'input.html' 'output.html'
 ```
-### Pattern match multiple files
+### Multiple files with pattern matching (aka file globbing)
 When pattern matching multiple files, the output parameter (2 argument) is ignored. By default, ```'output-'``` is prefixed to every file.<br>
-This can be changed in the config section.
+This can be changed in the config file.
 ```zsh
 # Run the app
-$ node anchors-aweigh.js 'chap*.html'
+$ node main.js 'chap*.html'
 ```
 <br>
 
 ## Preloaded Usage Example
 ```zsh
-node anchors-aweigh.js sample.html output.html
+node main.js 'sample.html' 'output.html'
 ```
 <br>
 
 ## Configuration Options and Default Values
+Located in the config.js file. <br>
 ```javascript
-const targetSelector = "main h1, main h2, main h3, main h4, main h5, main h6";
+config.targetSelector = "main h1, main h2, main h3, main h4, main h5, main h6";
 ```
 Adjust this to target which headers you want to modify.<br>
 This is intended for the [Canada.ca WET template](https://github.com/wet-boew/GCWeb/releases/tag/v8.1.0) so we stay within ```<main>```
@@ -61,7 +62,7 @@ This is intended for the [Canada.ca WET template](https://github.com/wet-boew/GC
 
 
 ```javascript
-const skipLastX = 1;
+config.skipLastX = 1;
 ```
 Option to skip the last X targeted selectors.<br>
 This is intended for the [Canada.ca WET template](https://github.com/wet-boew/GCWeb/releases/tag/v8.1.0) so we skip the last heading
@@ -69,7 +70,7 @@ This is intended for the [Canada.ca WET template](https://github.com/wet-boew/GC
 
 
 ```javascript
-const skipFirstX = 0;
+config.skipFirstX = 0;
 ```
 Option to skip the first X targeted selectors.<br>
 Not needed, but added for completeness.
@@ -77,7 +78,7 @@ Not needed, but added for completeness.
 
 
 ```javascript
-const removeStopWords = true;
+config.removeStopWords = true;
 ```
 In natural language processing, "Stopwords" are words that are so frequent that they can safely be removed from a text without altering its meaning.<br>
 **Examples:** a, an, the, and, any, can, or
@@ -87,16 +88,24 @@ This option is good for those lengthy headers.
 
 
 ```javascript
-const multiFilePrefix = "output-";
+config.multiFilePrefix = "output-";
 ```
 For use when pattern matching multiple files. The output parameter is ignored. Instead, we add a prefix to the input file name.
 <br/><br/>
 
 ```javascript
-const multiFileSuffix = "";
+config.multiFileSuffix = "";
 ```
-Suffix equivalent.
+For use when pattern matching multiple files.<br>This is the suffix equivalent.
 <br/><br/>
 
-
-
+```javascript
+config.addAnchorIcon = true;
+```
+Add an anchor link before each target. This can be customized.<br>
+**Example:** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ins>\#</ins> Heading 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Lorem ipsum dolor sit amet <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ins>\#</ins> Heading 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Consectetur adipiscing elit
+<br/><br/>
