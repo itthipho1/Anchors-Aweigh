@@ -6,6 +6,8 @@ const anchors = require('./anchors-aweigh');
 
 // for file manageemnt
 const fs = require('fs');
+const async = require('async');
+
 const glob = require("glob");
 
 // Arguments
@@ -23,23 +25,67 @@ glob(inputFilename, function (err, files) {
             console.log('No files found with \'' + inputFilename + '\'.');
         } else if (files.length === 1) {
             content = fs.readFileSync(inputFilename, 'utf8');
-            content = anchors.generateAnchor(content);
+            content = anchors.generateAnchor(content, outputFilename);
+            // fs.writeFileSync(outputFilename, content);
+            // console.log(`Created: ${outputFilename}`);
+        } else {    // for multiple files
 
-            fs.writeFileSync(outputFilename, content);
-            console.log(`Created: ${outputFilename}`);
-        } else {    // condition: files.length > 1
-            files.forEach(function (file) {
+            async.map(files, readEachFile, function (err, data) {
+                if (err) {
+                    console.log(err);
+                } else {
+
+console.log(data[0].toString());    // file name
+
+console.log(data.toString());
+                    for (let file of files) {
+                        console.log('line 37');
+                        console.log(file.toString());
+                        console.log(data.toString());
+
+
+                    }
+                }
+            });
+
+            function readEachFile(file, done) {
+                // computing stuff here...
+
                 fs.readFile(file, function (err, data) {
+
                     if (err) {
                         console.log(err);
                     } else {
-                        content = anchorsAweigh(data);
-                        let [fileName, fileExtension] = file.split('.');
-                        fs.writeFileSync(`${config.multiFilePrefix}${fileName}${config.multiFileSuffix}.${fileExtension}`, content);
-                        console.log(file);
+                        console.log(`output ${data}`);
+                        // content = anchors.generateAnchor(data);
+                        // let [fileName, fileExtension] = file.split('.');
+                        // fs.writeFileSync(`${config.multiFilePrefix}${fileName}${config.multiFileSuffix}.${fileExtension}`, content);
+                        // console.log(`Created: ${file}`);
                     }
                 });
-            });
+
+                console.log('file');
+                console.log(file);
+                console.log('done');
+                console.log(done);
+
+                done(null, file);
+              }
+
+
+            // files.forEach(function (file) {
+            //     fs.readFile(file, function (err, data) {
+
+            //         if (err) {
+            //             console.log(err);
+            //         } else {
+            //             content = anchors.generateAnchor(data);
+            //             let [fileName, fileExtension] = file.split('.');
+            //             fs.writeFileSync(`${config.multiFilePrefix}${fileName}${config.multiFileSuffix}.${fileExtension}`, content);
+            //             console.log(`Created: ${file}`);
+            //         }
+            //     });
+            // });
         }
     }
 });

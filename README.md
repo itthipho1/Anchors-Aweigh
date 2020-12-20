@@ -1,5 +1,5 @@
 # Anchors-Aweigh
-**Script purpose:** To automatically add anchors to headings.<br>
+**Script purpose:** To automatically add anchors (IDs) to headings.<br>
 
 
 Default configurations have been set for this to work within the [Canada.ca WET template](https://github.com/wet-boew/GCWeb/releases/tag/v8.1.0), outside of AEM.<br>You can easily modify this to work within AEM.
@@ -36,6 +36,14 @@ $ npm install
 # Run the app
 $ node main.js 'input.html' 'output.html'
 ```
+<br>
+
+#### Preloaded Usage Example
+```zsh
+node main.js 'sample.html' 'output.html'
+```
+<br>
+
 ### Multiple files with pattern matching (aka file globbing)
 When pattern matching multiple files, the output parameter (2 argument) is ignored. By default, ```'output-'``` is prefixed to every file.<br>
 This can be changed in the config file.
@@ -45,11 +53,7 @@ $ node main.js 'chap*.html'
 ```
 <br>
 
-## Preloaded Usage Example
-```zsh
-node main.js 'sample.html' 'output.html'
-```
-<br>
+
 
 ## Configuration Options and Default Values
 Located in the config.js file. <br>

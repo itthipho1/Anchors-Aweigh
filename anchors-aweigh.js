@@ -1,14 +1,27 @@
-// Load configuration file
+// Load custom configuration file
 const config = require('./config');
 
-// load stopword module
+// load custom stopword module
 const sw = require('./stopword.js');
+
+// load custom toc module
+const TOC = require('./TOC.js');
+
+// for file manageemnt
+const fs = require('fs');
 
 // for HTML properties
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
-const generateAnchor = (content) => {
+let tocObj = [];
+
+/**
+ * Add anchors to all headers of a file
+ * @param {string} content | html to parse
+ * @param {string} outputFilename | name of output file
+ */
+const generateAnchor = (content, outputFilename) => {
     const dom = new JSDOM(content);
     let allHeaders = dom.window.document.querySelectorAll(config.targetSelector);
 
@@ -30,6 +43,18 @@ const generateAnchor = (content) => {
             // already has ID
             idToLink = allHeaders[i].getAttribute("id");
         }
+
+
+        /**
+         *  Collect header info
+         **/
+        tocObj.push({
+            index: i,
+            tag: allHeaders[i].tagName,
+            ID: idToLink,
+            text: allHeaders[i].textContent
+        });
+
 
         if (config.addAnchorIcon) {
             /**
@@ -55,6 +80,11 @@ const generateAnchor = (content) => {
         }
 
     }
+
+    TOC.storeTOC(tocObj);
+
+    fs.writeFileSync(outputFilename, dom.window.document.documentElement.outerHTML);
+    console.log(`Created: ${outputFilename}`);
 
     return dom.window.document.documentElement.outerHTML;
 };

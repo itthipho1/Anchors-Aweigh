@@ -12,4 +12,6 @@ config.multiFileSuffix = "";
 
 config.addAnchorIcon = true;
 
+config.generateToC = true;
+
 module.exports = config;
